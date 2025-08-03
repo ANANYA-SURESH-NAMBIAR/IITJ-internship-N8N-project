@@ -1,0 +1,400 @@
+{
+  "name": "final project p1",
+  "nodes": [
+    {
+      "parameters": {
+        "form": "252113528116044"
+      },
+      "type": "n8n-nodes-base.jotFormTrigger",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -16
+      ],
+      "id": "3419cf54-204e-4edf-b4ac-2d723116ac4e",
+      "name": "JotForm Trigger",
+      "webhookId": "49525c2d-1667-4b1f-b3d7-317727973686",
+      "credentials": {
+        "jotFormApi": {
+          "id": "gTblCKgoiUQC1I2d",
+          "name": "JotForm account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a study plan generator. You make study plans according to the following to help the student achieve their goal:\nYou have to create a {{ $json['How many days\\' study plan do you want (maximum is 1 week)'] }} days study plan on subjects {{ $json['Enter the subjects you want to focus on'] }}.\nBreak subjects into daily topics, adjusting for attention span.\nEnsure sessions fit the preferred study time {{ $json['How many hours can you study per day?'] }} and {{ $json['Do you prefer fixed or flexible study routines?'] }} schedule within or around {{ $json['Preferred study time'] }}.\nIf “Flexible blocks” is chosen, allow variety and slight timing shifts across days.\nRecommend revision strategies, micro-breaks, and weekly self-checks.\nKeep tone motivational and structured.\n\nReturn only a **raw JSON array** with no keys like \"output\", no stringified arrays, and no extra explanation or formatting. The output must begin with `[` and end with `]`.\n\nEach item in the array should be an object like this:\n{ \"day\": \"Day 1\", \"time\": \"4:00 pm - 5:00 pm\", \"topic\": \"Topic name here\" }\n\nExample of expected output:\n[ \n  { \"day\": \"Day 1\", \"time\": \"6:30 am - 7:30 am\", \"topic\": \"Seven Years War: Causes and Early Events\" },\n  { \"day\": \"Day 1\", \"time\": \"7:30 am - 7:40 am\", \"topic\": \"Micro-break (stretch, hydrate)\" },\n  { \"day\": \"Day 1\", \"time\": \"7:40 am - 8:30 am\", \"topic\": \"Introduction to Computer Networks: Basics & Types\" },\n  { \"day\": \"Day 1\", \"time\": \"8:30 am - 8:40 am\", \"topic\": \"Micro-break\" },\n  { \"day\": \"Day 1\", \"time\": \"8:40 am - 9:00 am\", \"topic\": \"Quick Revision: Summarize key points from Seven Years War & Networks\" },\n  { \"day\": \"Day 2\", \"time\": \"7:00 am - 8:00 am\", \"topic\": \"Seven Years War: Major Battles & Outcomes\" },\n  { \"day\": \"Day 2\", \"time\": \"8:00 am - 8:10 am\", \"topic\": \"Micro-break\" },\n  { \"day\": \"Day 2\", \"time\": \"8:10 am - 9:00 am\", \"topic\": \"Computer Networks: OSI Model & Protocols\" },\n  { \"day\": \"Day 2\", \"time\": \"9:00 am - 9:10 am\", \"topic\": \"Micro-break\" },\n  { \"day\": \"Day 2\", \"time\": \"9:10 am - 9:30 am\", \"topic\": \"Self-quiz: Key facts on Seven Years War\" } \n]\nOnly return this JSON array. Do not include quotation marks around it, do not include markdown formatting, and do not wrap it in any object or key.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        336,
+        272
+      ],
+      "id": "711fd92c-02f9-4685-9d0c-690783f6bc4f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        528
+      ],
+      "id": "714c93ee-0d1f-4b1a-b1dc-57373a0d2c59",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Bmc90JcjHkpNPRU6",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json[\"output\"];\nconst parsed = JSON.parse(raw);\nreturn parsed.map(item => ({ json: item }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        272
+      ],
+      "id": "34e517fc-c319-4d55-8fda-a777ba027345",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1hMAMuRXYwyJYp7W1h9sDCGwXHVbRMFlWVuA2pN8FBSY",
+          "mode": "list",
+          "cachedResultName": "study plan sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1hMAMuRXYwyJYp7W1h9sDCGwXHVbRMFlWVuA2pN8FBSY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1hMAMuRXYwyJYp7W1h9sDCGwXHVbRMFlWVuA2pN8FBSY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "first_name": "={{ $json.Name.first }}",
+            "last_name": "={{ $json.Name.last }}",
+            "email": "={{ $json.Email }}",
+            "subjects": "={{ $json['Enter the subjects you want to focus on'] }}",
+            "hours": "={{ $json['How many hours can you study per day?'] }}",
+            "time": "={{ $json['Preferred study time'] }}",
+            "duration ": "={{ $json['How many days\\' study plan do you want (maximum is 1 week)'] }}",
+            "unique_id": "={{ $json['Unique ID'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "unique_id",
+              "displayName": "unique_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "subjects",
+              "displayName": "subjects",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hours",
+              "displayName": "hours",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "time",
+              "displayName": "time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "duration ",
+              "displayName": "duration ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        352,
+        -192
+      ],
+      "id": "d2be4729-e87e-4920-aca2-6316c01e4dbc",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GnR50dQyRaMj0EtA",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "Thank you for choosing StudyPal as your study planner!!",
+        "message": "=Your first study plan will be sent shortly.\n\nHappy Learning!!!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        720,
+        -192
+      ],
+      "id": "25195d82-9fff-4512-a969-f0fa8c5e7f52",
+      "name": "Send a message",
+      "webhookId": "9c6b07b1-7c26-4155-8ff9-a872ecc7a726",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UQSoyUr5T299h9ez",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "242e2e6a-c9c9-8093-bda2-fdc23c015ef5",
+          "mode": "list",
+          "cachedResultName": "Study Plan",
+          "cachedResultUrl": "https://www.notion.so/242e2e6ac9c98093bda2fdc23c015ef5"
+        },
+        "title": "={{ $json.day }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "day|title",
+              "title": "={{ $json.day }}"
+            },
+            {
+              "key": "study_time|rich_text",
+              "textContent": "={{ $json.time }}"
+            },
+            {
+              "key": "topic|rich_text",
+              "textContent": "={{ $json.topic }}"
+            },
+            {
+              "key": "email|email",
+              "emailValue": "={{ $('JotForm Trigger').item.json.Email }}"
+            },
+            {
+              "key": "name|rich_text",
+              "textContent": "={{ $('JotForm Trigger').item.json.Name.first }} {{ $('JotForm Trigger').item.json.Name.last }}"
+            },
+            {
+              "key": "duration|rich_text",
+              "textContent": "={{ $('JotForm Trigger').item.json['How many days\\' study plan do you want (maximum is 1 week)'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1008,
+        272
+      ],
+      "id": "7fa99d0b-51bb-4080-98ae-b8a312497939",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "kMjgRTwSmDdBmulm",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "HdeaEVTYdSY9AIfP",
+          "mode": "list",
+          "cachedResultName": "final proj p2"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        272
+      ],
+      "id": "5ae27e4c-1c4e-491c-bdf4-92899a8ddbff",
+      "name": "Execute Workflow1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "JotForm Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "Create a database page": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "43f1d23c-ffee-486b-a3fb-6056c4085884",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5dea81e63921e568a5fe1ccc6c652cbe574a583276073f9beeda8052a2e9ef5a"
+  },
+  "id": "9uaIgGHk9Uw5Z2Ra",
+  "tags": []
+}
