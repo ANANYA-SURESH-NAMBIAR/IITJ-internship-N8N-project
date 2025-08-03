@@ -1,0 +1,1429 @@
+{
+  "name": "final proj p2",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "242e2e6a-c9c9-8093-bda2-fdc23c015ef5",
+          "mode": "list",
+          "cachedResultName": "Study Plan",
+          "cachedResultUrl": "https://www.notion.so/242e2e6ac9c98093bda2fdc23c015ef5"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        -16
+      ],
+      "id": "67a358f2-8984-4c70-8289-53b483c416b1",
+      "name": "Get many database pages",
+      "credentials": {
+        "notionApi": {
+          "id": "kMjgRTwSmDdBmulm",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('If1').item.json.property_email }}",
+        "subject": "=Hello, {{ $('If1').item.json.property_name }}!! Here is your study plan for today!! ",
+        "emailType": "text",
+        "message": "={{ $('If1').item.json.property_day }}/ {{ $('If1').item.json.property_duration.replace(\"days\",\"\")}}\n {{ $('If1').item.json.property_study_time }}: {{ $('If1').item.json.property_topic }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2160,
+        -464
+      ],
+      "id": "bd69b4bd-523b-4ded-91f2-bb8c7acff19f",
+      "name": "Send a message2",
+      "webhookId": "bd9cce7b-34cc-467a-b942-af8e289b54d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UQSoyUr5T299h9ez",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        -16
+      ],
+      "id": "2fd2f83a-101d-4d83-8fb4-eb2beec1cdd0",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data=items.filter(item => item.json.property_day === \"Day 1\");\nif (data.length>0){\n  return data;\n}else{\n  data=[{\n  \"id\":\"empty\"\n  }];\n  return data;\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        -448
+      ],
+      "id": "ca3d5299-b687-4eaf-98f6-291f62292ada",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data=items.filter(item => item.json.property_day === \"Day 2\");\nif (data.length>0){\n  return data;\n}else{\n  data=[{\n  \"id\":\"empty\"\n  }];\n  return data;\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        -96
+      ],
+      "id": "e67c5d37-622c-4c69-8f16-ada6848bd623",
+      "name": "Code5"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"{{ $json.name }}\": \"{{ $json.property_study_time }} : {{ $json.property_topic }}\"\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1824,
+        -464
+      ],
+      "id": "7b470942-6609-438c-8eaf-ed2be081ed08",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"{{ $json.name }}\": \"{{ $json.property_study_time }} : {{ $json.property_topic }}\"\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1824,
+        -112
+      ],
+      "id": "91e11273-3b62-45a9-b62d-40936b48f002",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "542007ea-2a52-4c1d-8a58-be4a0d26b43c",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1488,
+        -448
+      ],
+      "id": "022ce48a-ac39-4411-a131-f313d097ae75",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2368,
+        -464
+      ],
+      "id": "d5915e10-1d10-418e-a331-471f4c0dd8d4",
+      "name": "Wait1",
+      "webhookId": "dc09b1de-0ebd-459f-966d-0ed87c09433e"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "542007ea-2a52-4c1d-8a58-be4a0d26b43c",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1472,
+        -96
+      ],
+      "id": "04983559-3793-4ddb-b069-69f503fb8c5a",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2384,
+        -112
+      ],
+      "id": "117e55da-aee1-4a45-856a-4c45c8489c3f",
+      "name": "Wait2",
+      "webhookId": "dc09b1de-0ebd-459f-966d-0ed87c09433e"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1072,
+        -96
+      ],
+      "id": "6095435e-663a-4a1b-b07d-3f9252f0c6af",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get many database pages').item.json.property_email }}",
+        "subject": "=Hello, {{ $('Get many database pages').item.json.property_name }}!! Here is your study plan for today!! ",
+        "emailType": "text",
+        "message": "={{ $('Get many database pages').item.json.property_day }}/ {{ $('Get many database pages').item.json.property_duration.replace(\"days\",\"\")}}\n {{ $('Get many database pages').item.json.property_study_time }} : {{ $('Get many database pages').item.json.property_topic }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2160,
+        -112
+      ],
+      "id": "a0393e18-3bd3-4a60-be0b-ce6b996298cd",
+      "name": "Send a message3",
+      "webhookId": "bd9cce7b-34cc-467a-b942-af8e289b54d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UQSoyUr5T299h9ez",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1088,
+        192
+      ],
+      "id": "f652e6a6-16e2-4d63-ab63-0faecb5c8c2c",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1088,
+        448
+      ],
+      "id": "79a7b28f-1777-410c-a846-92a9d1d56c2f",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1088,
+        736
+      ],
+      "id": "292e9ec7-5e3c-4efa-ac8d-5837ae97cc3d",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1104,
+        944
+      ],
+      "id": "6c5ae513-159e-4d6e-9435-dcefe3dddb66",
+      "name": "Merge5"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1088,
+        1200
+      ],
+      "id": "de5d9db1-49f8-4195-94e7-e03710837366",
+      "name": "Merge6"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data=items.filter(item => item.json.property_day === \"Day 3\");\nif (data.length>0){\n  return data;\n}else{\n  data=[{\n  \"id\":\"empty\"\n  }];\n  return data;\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        192
+      ],
+      "id": "6fb47609-8ab1-4b52-9972-ac9d6ea541c9",
+      "name": "Code6"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data=items.filter(item => item.json.property_day === \"Day 4\");\nif (data.length>0){\n  return data;\n}else{\n  data=[{\n  \"id\":\"empty\"\n  }];\n  return data;\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        448
+      ],
+      "id": "99ba9641-13a1-4c88-8d85-5d8829403c19",
+      "name": "Code7"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data=items.filter(item => item.json.property_day === \"Day 5\");\nif (data.length>0){\n  return data;\n}else{\n  data=[{\n  \"id\":\"empty\"\n  }];\n  return data;\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        736
+      ],
+      "id": "b06248d0-7174-47c5-87a9-59b341aed0e4",
+      "name": "Code8"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data=items.filter(item => item.json.property_day === \"Day 6\");\nif (data.length>0){\n  return data;\n}else{\n  data=[{\n  \"id\":\"empty\"\n  }];\n  return data;\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1312,
+        944
+      ],
+      "id": "39762100-ebf7-471e-b51a-fc148c28468f",
+      "name": "Code9"
+    },
+    {
+      "parameters": {
+        "jsCode": "let data=items.filter(item => item.json.property_day === \"Day 7\");\nif (data.length>0){\n  return data;\n}else{\n  data=[{\n  \"id\":\"empty\"\n  }];\n  return data;\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        1200
+      ],
+      "id": "435af132-8f29-4b0a-bfc4-b2f80763e94e",
+      "name": "Code10"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "542007ea-2a52-4c1d-8a58-be4a0d26b43c",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1472,
+        192
+      ],
+      "id": "63948e6c-6182-494c-ad59-5a6c4df75aa7",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"{{ $json.name }}\": \"{{ $json.property_study_time }} : {{ $json.property_topic }}\"\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        176
+      ],
+      "id": "a818c018-bbf6-46d9-99a8-89f9cc062466",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get many database pages').item.json.property_email }}",
+        "subject": "=Hello, {{ $('Get many database pages').item.json.property_name }}!! Here is your study plan for today!! ",
+        "emailType": "text",
+        "message": "={{ $('Get many database pages').item.json.property_day }}/ {{ $('Get many database pages').item.json.property_duration.replace(\"days\",\"\")}}\n {{ $('Get many database pages').item.json.property_study_time }} : {{ $('Get many database pages').item.json.property_topic }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2144,
+        176
+      ],
+      "id": "1803ef90-9bc8-48d6-9158-51ee46129666",
+      "name": "Send a message4",
+      "webhookId": "bd9cce7b-34cc-467a-b942-af8e289b54d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UQSoyUr5T299h9ez",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2400,
+        176
+      ],
+      "id": "30043088-0852-4b74-bbd2-43dd0801d32a",
+      "name": "Wait3",
+      "webhookId": "dc09b1de-0ebd-459f-966d-0ed87c09433e"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "542007ea-2a52-4c1d-8a58-be4a0d26b43c",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1504,
+        448
+      ],
+      "id": "40e25b13-b4ab-4efc-977d-bc25081be6ec",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "542007ea-2a52-4c1d-8a58-be4a0d26b43c",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1520,
+        736
+      ],
+      "id": "9c78acf7-7bf1-4253-bed0-d0c41b2900d2",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "542007ea-2a52-4c1d-8a58-be4a0d26b43c",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1536,
+        944
+      ],
+      "id": "3262a02f-fd7f-42bf-af3e-fa2d9f06a0a7",
+      "name": "If6"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "542007ea-2a52-4c1d-8a58-be4a0d26b43c",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1536,
+        1200
+      ],
+      "id": "588a12cf-c155-4e68-868a-46f80ab9cce2",
+      "name": "If7"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"{{ $json.name }}\": \"{{ $json.property_study_time }} : {{ $json.property_topic }}\"\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1808,
+        432
+      ],
+      "id": "4575597b-9568-4075-82f7-0fde92321649",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"{{ $json.name }}\": \"{{ $json.property_study_time }} : {{ $json.property_topic }}\"\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2016,
+        720
+      ],
+      "id": "739121c3-2c9a-4133-928d-d6e55263ac9a",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"{{ $json.name }}\": \"{{ $json.property_study_time }} : {{ $json.property_topic }}\"\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2032,
+        928
+      ],
+      "id": "60ea953e-8c22-44e0-b2b6-ef46c34f43de",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"{{ $json.name }}\": \"{{ $json.property_study_time }} : {{ $json.property_topic }}\"\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2048,
+        1184
+      ],
+      "id": "56bb542c-42ec-4f14-a85e-0fb87fd1a4c0",
+      "name": "Edit Fields8"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get many database pages').item.json.property_email }}",
+        "subject": "=Hello, {{ $('Get many database pages').item.json.property_name }}!! Here is your study plan for today!! ",
+        "emailType": "text",
+        "message": "={{ $('Get many database pages').item.json.property_day }}/ {{ $('Get many database pages').item.json.property_duration.replace(\"days\",\"\")}}\n {{ $('Get many database pages').item.json.property_study_time }} : {{ $('Get many database pages').item.json.property_topic }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2144,
+        432
+      ],
+      "id": "66ded322-4acb-4abd-85a8-aaac26e163b4",
+      "name": "Send a message5",
+      "webhookId": "bd9cce7b-34cc-467a-b942-af8e289b54d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UQSoyUr5T299h9ez",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get many database pages').item.json.property_email }}",
+        "subject": "=Hello, {{ $('Get many database pages').item.json.property_name }}!! Here is your study plan for today!! ",
+        "emailType": "text",
+        "message": "={{ $('Get many database pages').item.json.property_day }}/ {{ $('Get many database pages').item.json.property_duration.replace(\"days\",\"\")}}\n {{ $('Get many database pages').item.json.property_study_time }} : {{ $('Get many database pages').item.json.property_topic }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2352,
+        720
+      ],
+      "id": "a6ef31d6-bdb1-4cec-ae32-86c5e526c42f",
+      "name": "Send a message6",
+      "webhookId": "bd9cce7b-34cc-467a-b942-af8e289b54d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UQSoyUr5T299h9ez",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get many database pages').item.json.property_email }}",
+        "subject": "=Hello, {{ $('Get many database pages').item.json.property_name }}!! Here is your study plan for today!! ",
+        "emailType": "text",
+        "message": "={{ $('Get many database pages').item.json.property_day }}/ {{ $('Get many database pages').item.json.property_duration.replace(\"days\",\"\")}}\n {{ $('Get many database pages').item.json.property_study_time }} : {{ $('Get many database pages').item.json.property_topic }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2352,
+        928
+      ],
+      "id": "1a36bd31-8238-4d92-b646-a22e1355a26a",
+      "name": "Send a message7",
+      "webhookId": "bd9cce7b-34cc-467a-b942-af8e289b54d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UQSoyUr5T299h9ez",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get many database pages').item.json.property_email }}",
+        "subject": "=Hello, {{ $('Get many database pages').item.json.property_name }}!! Here is your study plan for today!! ",
+        "emailType": "text",
+        "message": "={{ $('Get many database pages').item.json.property_day }}/ {{ $('Get many database pages').item.json.property_duration.replace(\"days\",\"\")}}\n {{ $('Get many database pages').item.json.property_study_time }} : {{ $('Get many database pages').item.json.property_topic }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2368,
+        1184
+      ],
+      "id": "1737c262-a950-4960-a161-e193f100398c",
+      "name": "Send a message8",
+      "webhookId": "bd9cce7b-34cc-467a-b942-af8e289b54d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UQSoyUr5T299h9ez",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2432,
+        432
+      ],
+      "id": "f5d2d9c7-3ae7-4feb-9139-96c604d22df5",
+      "name": "Wait4",
+      "webhookId": "dc09b1de-0ebd-459f-966d-0ed87c09433e"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2624,
+        720
+      ],
+      "id": "c7b97568-a7fb-4af5-813e-c878de11b86c",
+      "name": "Wait5",
+      "webhookId": "dc09b1de-0ebd-459f-966d-0ed87c09433e"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2640,
+        928
+      ],
+      "id": "ae533362-43cd-4df1-ad8d-8df9257547a2",
+      "name": "Wait6",
+      "webhookId": "dc09b1de-0ebd-459f-966d-0ed87c09433e"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "=Hello,{{ $json.name }} !!",
+        "emailType": "text",
+        "message": "=Thank you for using StudyPal!!\nHope you had a splendid learning experience!!\nIf you want us to make another study plan for you, here is the link: https://form.jotform.com/252113528116044\n\nThank You!!\nHave a great day!!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        3392,
+        -32
+      ],
+      "id": "49e03560-c617-4f82-881e-381d1b2cdc02",
+      "name": "Send a message9",
+      "webhookId": "bd9cce7b-34cc-467a-b942-af8e289b54d1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UQSoyUr5T299h9ez",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "242e2e6a-c9c9-8093-bda2-fdc23c015ef5",
+          "mode": "list",
+          "cachedResultName": "Study Plan",
+          "cachedResultUrl": "https://www.notion.so/242e2e6ac9c98093bda2fdc23c015ef5"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        2880,
+        -32
+      ],
+      "id": "a130bcb5-9f23-4529-9e48-9a9b4b9d40af",
+      "name": "Get many database pages1",
+      "credentials": {
+        "notionApi": {
+          "id": "kMjgRTwSmDdBmulm",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let mergedText = items.map(item => {\n  return `• ${item.json.property_day}: ${item.json.property_topic}`;\n}).join('\\n');\n\nreturn [{\n  json: {\n    email: $input.first().json.property_email,\n    name:$input.first().json.property_name,\n    messageBody: mergedText\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3136,
+        -32
+      ],
+      "id": "bf0d07c4-60c4-41f7-b276-67bd2bfbd1eb",
+      "name": "Code11"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get many database pages": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get many database pages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code5": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Send a message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many database pages1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message2": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many database pages1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Code5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message3": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Code6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code6": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many database pages1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Send a message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message4": {
+      "main": [
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Code7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code7": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many database pages1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Send a message5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message5": {
+      "main": [
+        [
+          {
+            "node": "Wait4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait4": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "Code8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code8": {
+      "main": [
+        [
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many database pages1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Send a message6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message6": {
+      "main": [
+        [
+          {
+            "node": "Wait5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait5": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge5": {
+      "main": [
+        [
+          {
+            "node": "Code9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code9": {
+      "main": [
+        [
+          {
+            "node": "If6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If6": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many database pages1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Send a message7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message7": {
+      "main": [
+        [
+          {
+            "node": "Wait6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait6": {
+      "main": [
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge6": {
+      "main": [
+        [
+          {
+            "node": "Code10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code10": {
+      "main": [
+        [
+          {
+            "node": "If7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If7": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields8",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get many database pages1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields8": {
+      "main": [
+        [
+          {
+            "node": "Send a message8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many database pages1": {
+      "main": [
+        [
+          {
+            "node": "Code11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message9": {
+      "main": [
+        []
+      ]
+    },
+    "Code11": {
+      "main": [
+        [
+          {
+            "node": "Send a message9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "31679d99-7b9d-4799-90a9-79863f6c8dbe",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5dea81e63921e568a5fe1ccc6c652cbe574a583276073f9beeda8052a2e9ef5a"
+  },
+  "id": "HdeaEVTYdSY9AIfP",
+  "tags": []
+}
